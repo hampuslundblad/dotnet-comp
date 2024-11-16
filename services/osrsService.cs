@@ -3,14 +3,9 @@ using System.Threading.Tasks;
 
 namespace dotnet_comp.Services
 {
-    public class OsrsService
+    public class OsrsService(HttpClient httpClient)
     {
-        private readonly HttpClient _httpClient;
-
-        public OsrsService(HttpClient httpClient)
-        {
-            _httpClient = httpClient;
-        }
+        private readonly HttpClient _httpClient = httpClient;
 
         public async Task<string?> GetHiscoreDataAsync(string name)
         {

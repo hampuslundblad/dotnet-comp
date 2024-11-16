@@ -29,6 +29,7 @@ namespace dotnet_comp.Controllers
         [HttpGet("hiscore")]
         public async Task<IActionResult> Get([FromQuery] string name)
         {
+            _logger.LogInformation($"Getting hiscore data for {name}");
             var data = await _osrsService.GetHiscoreDataAsync(name);
             if (data != null)
             {
