@@ -16,12 +16,10 @@ namespace dotnet_comp.Controllers
         private readonly ILogger<OsrsController> _logger;
         private readonly OsrsService _osrsService;
 
-        private readonly HttpClient _httpClient;
 
-        public OsrsController(ILogger<OsrsController> logger, HttpClient httpClient, OsrsService osrsService)
+        public OsrsController(ILogger<OsrsController> logger, OsrsService osrsService)
         {
             _logger = logger;
-            _httpClient = httpClient;
             _osrsService = osrsService;
 
         }
@@ -29,8 +27,8 @@ namespace dotnet_comp.Controllers
         [HttpGet("hiscore")]
         public async Task<IActionResult> Get([FromQuery] string name)
         {
-            _logger.LogInformation($"Getting hiscore data for {name}");
-            var data = await _osrsService.GetHiscoreDataAsync(name);
+            _logger.LogInformation("Getting hiscore data for {name}", name);
+            var data = await _osrsService.GetPlayerHiscoreDataAsync(name);
             if (data != null)
             {
                 return Ok(data);

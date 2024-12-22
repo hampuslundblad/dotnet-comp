@@ -3,11 +3,13 @@ using dotnet_comp.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
 
 // Register HttpClient
-builder.Services.AddHttpClient();
+builder.Services.AddHttpClient<RunescapeClient>(client =>
+{
+    client.BaseAddress = new Uri("https://secure.runescape.com/");
+});
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
