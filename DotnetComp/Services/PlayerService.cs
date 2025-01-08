@@ -1,14 +1,14 @@
 using System.Linq;
 using System.Net;
 using Microsoft.OpenApi.Any;
-using dotnet_comp.Clients;
-using dotnet_comp.Errors;
-using dotnet_comp.Mappers;
-using dotnet_comp.Models.Domain;
-using dotnet_comp.Results;
+using DotnetComp.Clients;
+using DotnetComp.Errors;
+using DotnetComp.Mappers;
+using DotnetComp.Models.Domain;
+using DotnetComp.Results;
 
 
-namespace dotnet_comp.Services
+namespace DotnetComp.Services
 {
     public interface IPlayerService
     {

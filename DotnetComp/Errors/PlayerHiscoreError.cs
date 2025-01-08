@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 
-namespace dotnet_comp.Errors
+namespace DotnetComp.Errors
 {
     public static class PlayerHiscoreError
     {

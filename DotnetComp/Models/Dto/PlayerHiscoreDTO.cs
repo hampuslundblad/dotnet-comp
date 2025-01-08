@@ -1,5 +1,5 @@
-using dotnet_comp.Models.Domain;
-namespace dotnet_comp.Models.Dto
+using DotnetComp.Models.Domain;
+namespace DotnetComp.Models.Dto
 {
     public class PlayerHiscoreDTO
     {

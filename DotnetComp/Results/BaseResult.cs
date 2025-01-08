@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using dotnet_comp.Errors;
+using DotnetComp.Errors;
 
-namespace dotnet_comp.Results
+namespace DotnetComp.Results
 {
     public class BaseResult
     {

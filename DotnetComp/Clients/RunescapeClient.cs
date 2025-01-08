@@ -1,4 +1,4 @@
-namespace dotnet_comp.Clients
+namespace DotnetComp.Clients
 {
     public interface IRunescapeClient
     {

@@ -1,22 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using DotnetComp.Services;
+using DotnetComp.Models.Dto;
 
-using dotnet_comp.Services;
-using dotnet_comp.Models.Dto;
-
-namespace dotnet_comp.Controllers
+namespace DotnetComp.Controllers
 {
     [ApiController]
     [Route("player")]
-    public class PlayerController(ILogger<PlayerController> logger, PlayerService playerService) : ControllerBase
+    public class PlayerController(ILogger<PlayerController> logger, IPlayerService playerService) : ControllerBase
     {
         private readonly ILogger<PlayerController> logger = logger;
-        private readonly PlayerService playerService = playerService;
+        private readonly IPlayerService playerService = playerService;
 
         [HttpGet("hiscore")]
         public async Task<ActionResult<PlayerHiscoreDTO>> Get([FromQuery] string name)

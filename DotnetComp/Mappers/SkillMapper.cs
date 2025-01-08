@@ -1,6 +1,6 @@
-using dotnet_comp.Models.Domain;
+using DotnetComp.Models.Domain;
 
-namespace dotnet_comp.Mappers
+namespace DotnetComp.Mappers
 {
     public static class SkillMapper
     {
