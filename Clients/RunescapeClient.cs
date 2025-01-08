@@ -1,28 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace dotnet_comp.Clients
 {
-    private readonly HttpClient _httpClient;
-    public class RunescapeClient(HttpClient httpClient)
+    public interface IRunescapeClient
     {
-        _httpClient = httpClient;
+        Task<HttpResponseMessage> GetPlayerHiscoreAsync(string name);
     }
-    public async Task<string?> GetPlayerHiscoreAsync(string name)
-        {
-            var url = $"m=hiscore_oldschool/index_lite.ws?player={name}";
-            var response = await _httpClient.GetAsync(url);
-            if (response.IsBadRequestStatusCode)
-            {
-                throw new Exception("Player not found");
-            }
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new Exception("Error fetching player data");
-            }
 
-            return await response.Content.ReadAsStringAsync();
+    public class RunescapeClient(IHttpClientFactory httpClientFactory) : IRunescapeClient
+    {
+        private readonly IHttpClientFactory httpClientFactory = httpClientFactory;
+
+        public async Task<HttpResponseMessage> GetPlayerHiscoreAsync(string name)
+        {
+            using HttpClient client = httpClientFactory.CreateClient("RunescapeClient");
+            var url = $"m=hiscore_oldschool/index_lite.ws?player={name}";
+            var response = await client.GetAsync(url);
+            return response;
         }
     }
+}

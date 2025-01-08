@@ -22,3 +22,5 @@ obj/
 # VS Code directories
 .vscode/
 
+
+.fake

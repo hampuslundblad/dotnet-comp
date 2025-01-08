@@ -1,50 +1,66 @@
-using dotnet_comp.Mappers;
-
-using dotnet_comp.models;
-using dotnet_comp.models.domain;
+using System.Linq;
+using System.Net;
 using Microsoft.OpenApi.Any;
+using dotnet_comp.Clients;
+using dotnet_comp.Errors;
+using dotnet_comp.Mappers;
+using dotnet_comp.Models.Domain;
+using dotnet_comp.Results;
+
 
 namespace dotnet_comp.Services
 {
-    public class OsrsService
+    public interface IPlayerService
     {
-        private readonly HttpClient _httpClient;
+        Task<Result<PlayerHiscore>> GetPlayerHiscoreDataAsync(string name);
+    }
+    public class PlayerService(ILogger<PlayerService> logger, IRunescapeClient runescapeClient) : IPlayerService
+    {
+        private readonly IRunescapeClient runescapeClient = runescapeClient;
+        private readonly ILogger<PlayerService> logger = logger;
 
-        public OsrsService(HttpClient httpClient)
+        public async Task<Result<PlayerHiscore>> GetPlayerHiscoreDataAsync(string name)
         {
-            _httpClient = httpClient;
 
-        }
+            var response = await runescapeClient.GetPlayerHiscoreAsync(name);
 
-        public async Task<PlayerHiscore> GetPlayerHiscoreDataAsync(string name)
-        {
-
-            var response = await _httpClient.GetAsync($"https://secure.runescape.com/m=hiscore_oldschool/index_lite.ws?player={name}");
-            if (response.IsBadRequestStatusCode)
+            if (response.StatusCode == HttpStatusCode.NotFound)
             {
-                throw new Exception("Player not found");
+                return Result<PlayerHiscore>.Failure(PlayerHiscoreError.NotFound());
             }
             if (!response.IsSuccessStatusCode)
             {
-                throw new Exception("Error fetching player data");
+                return Result<PlayerHiscore>.Failure(PlayerHiscoreError.ServiceError());
             }
 
-            var responseString = await response.Content.ReadAsStringAsync();
-
-            var parts = responseString.Split([',', '\n'], StringSplitOptions.RemoveEmptyEntries);
-            var skills = SkillMapper.MapStringToSkill(parts.Skip(3).ToArray());
-            var playerRank = parts[0];
-            var totalLevel = parts[1];
-            var totalExperience = parts[2];
-
-            return new PlayerHiscore()
+            try
             {
-                Name = name,
-                TotalExperience = int.Parse(totalExperience),
-                Rank = int.Parse(playerRank),
-                TotalLevel = int.Parse(totalLevel),
-                Skills = skills,
-            };
+                var responseString = await response.Content.ReadAsStringAsync();
+                // The response is difficult, see https://runescape.wiki/w/Application_programming_interface#Old_School_Hiscores for more info. 
+                var parts = responseString.Split(['\n']);
+
+                var playerRankTotalLevelAndExperience = parts[0].Split(',');
+                var playerRank = playerRankTotalLevelAndExperience[0];
+                var totalLevel = playerRankTotalLevelAndExperience[1];
+                var totalExperience = playerRankTotalLevelAndExperience[2];
+
+                var skillsAsStrings = parts.Skip(1).Where(s => s.Count(c => c == ',') > 1).ToArray();
+                var skills = SkillMapper.MapStringToSkill(skillsAsStrings);
+
+                return Result<PlayerHiscore>.Success(new PlayerHiscore()
+                {
+                    Name = name,
+                    TotalExperience = int.Parse(totalExperience),
+                    Rank = int.Parse(playerRank),
+                    TotalLevel = int.Parse(totalLevel),
+                    Skills = skills,
+                });
+            }
+            catch (Exception e)
+            {
+                logger.LogError("Failed to parse player hiscore data {Message}", e);
+                return Result<PlayerHiscore>.Failure(PlayerHiscoreError.ServiceError());
+            }
         }
     }
 }

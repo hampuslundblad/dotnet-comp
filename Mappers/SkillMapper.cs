@@ -1,12 +1,12 @@
-using dotnet_comp.models;
+using dotnet_comp.Models.Domain;
 
 namespace dotnet_comp.Mappers
 {
     public static class SkillMapper
     {
-        private static readonly int RANK_OFFSET = 1;
-        private static readonly int LEVEL_OFFSET = 2;
-        private static readonly int EXPERIENCE_OFFSET = 3;
+        private static readonly int RANK_OFFSET = 0;
+        private static readonly int LEVEL_OFFSET = 1;
+        private static readonly int EXPERIENCE_OFFSET = 2;
 
         private static readonly string[] skillNamesInOrder = [
             "Attack",
@@ -40,17 +40,20 @@ namespace dotnet_comp.Mappers
             var skills = new List<Skill>();
             try
             {
-                for (int i = 0; i < skillRankLevelExperience.Length - 1; i++)
+                for (int i = 0; i < skillRankLevelExperience.Length; i++)
                 {
+                    var parts = skillRankLevelExperience[i].Split(',');
                     var skill = new Skill
                     {
                         Name = skillNamesInOrder[i],
-                        Rank = int.Parse(skillRankLevelExperience[i + RANK_OFFSET]),
-                        Level = int.Parse(skillRankLevelExperience[i + LEVEL_OFFSET]),
-                        Experience = int.Parse(skillRankLevelExperience[i + EXPERIENCE_OFFSET])
+                        Rank = int.Parse(parts[RANK_OFFSET]),
+                        Level = int.Parse(parts[LEVEL_OFFSET]),
+                        Experience = int.Parse(parts[EXPERIENCE_OFFSET])
                     };
+
                     skills.Add(skill);
                 }
+
                 return skills;
             }
             catch (Exception e)

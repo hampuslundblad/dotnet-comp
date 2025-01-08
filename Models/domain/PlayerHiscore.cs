@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace dotnet_comp.models.domain
+namespace dotnet_comp.Models.Domain
 {
     public class PlayerHiscore
     {

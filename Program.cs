@@ -1,3 +1,4 @@
+using dotnet_comp.Clients;
 using dotnet_comp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -5,18 +6,23 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
 
-// Register HttpClient
-builder.Services.AddHttpClient<RunescapeClient>(client =>
-{
-    client.BaseAddress = new Uri("https://secure.runescape.com/");
-});
+
+builder.Services.AddHttpClient(
+    "RunescapeClient",
+    client => client.BaseAddress = new Uri("https://secure.runescape.com/")
+);
+
+
+
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Register the OsrsService
-builder.Services.AddScoped<OsrsService, OsrsService>();
+
+builder.Services.AddScoped<PlayerService, PlayerService>();
+builder.Services.AddScoped<IRunescapeClient, RunescapeClient>();
+
 
 var app = builder.Build();
 

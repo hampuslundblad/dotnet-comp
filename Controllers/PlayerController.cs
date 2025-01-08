@@ -3,36 +3,33 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using dotnet_comp.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+
+using dotnet_comp.Services;
+using dotnet_comp.Models.Dto;
 
 namespace dotnet_comp.Controllers
 {
     [ApiController]
-    [Route("osrs")]
-    public class OsrsController : ControllerBase
+    [Route("player")]
+    public class PlayerController(ILogger<PlayerController> logger, PlayerService playerService) : ControllerBase
     {
-        private readonly ILogger<OsrsController> _logger;
-        private readonly OsrsService _osrsService;
-
-
-        public OsrsController(ILogger<OsrsController> logger, OsrsService osrsService)
-        {
-            _logger = logger;
-            _osrsService = osrsService;
-
-        }
+        private readonly ILogger<PlayerController> logger = logger;
+        private readonly PlayerService playerService = playerService;
 
         [HttpGet("hiscore")]
-        public async Task<IActionResult> Get([FromQuery] string name)
+        public async Task<ActionResult<PlayerHiscoreDTO>> Get([FromQuery] string name)
         {
-            _logger.LogInformation("Getting hiscore data for {name}", name);
-            var data = await _osrsService.GetPlayerHiscoreDataAsync(name);
-            if (data != null)
+            logger.LogInformation("Getting hiscore data for {name}", name);
+            var response = await playerService.GetPlayerHiscoreDataAsync(name);
+            if (response.IsSucess)
             {
-                return Ok(data);
+                var result = PlayerHiscoreDTO.FromDomain(response.Value);
+                return Ok(result);
             }
+
+            logger.LogError("Error retrieving hiscore data");
             return StatusCode(500, "Error retrieving hiscore data");
         }
 
