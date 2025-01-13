@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using DotnetComp.Services;
 using DotnetComp.Models.Dto;
+using DotnetComp.Results;
+using DotnetComp.Services;
+using DotnetComp.Errors;
 
 namespace DotnetComp.Controllers
 {
@@ -11,20 +13,28 @@ namespace DotnetComp.Controllers
         private readonly ILogger<PlayerController> logger = logger;
         private readonly IPlayerService playerService = playerService;
 
-        [HttpGet("hiscore")]
-        public async Task<ActionResult<PlayerHiscoreDTO>> Get([FromQuery] string name)
+        [HttpGet()]
+        public async Task<ActionResult<GetPlayerDTO>> GetPlayer()
         {
-            logger.LogInformation("Getting hiscore data for {name}", name);
-            var response = await playerService.GetPlayerHiscoreDataAsync(name);
-            if (response.IsSucess)
-            {
-                var result = PlayerHiscoreDTO.FromDomain(response.Value);
-                return Ok(result);
-            }
-
-            logger.LogError("Error retrieving hiscore data");
-            return StatusCode(500, "Error retrieving hiscore data");
+            var result = await playerService.GetPlayer(123);
+            return result.Match(
+                onSuccess: () =>
+                {
+                    var dto = new GetPlayerDTO
+                    {
+                        Name = result.Value.PlayerName
+                    };
+                    return Ok(dto);
+                },
+                onFailure: (error) =>
+                {
+                    return error.ErrorType switch
+                    {
+                        ErrorType.NotFound => NotFound("Player not found"),
+                        _ => StatusCode(500, "An unexpected error occurred")
+                    };
+                }
+            );
         }
-
     }
 }

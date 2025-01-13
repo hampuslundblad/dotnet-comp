@@ -18,8 +18,8 @@ namespace DotnetComp.Tests
         public async Task Get_ReturnsPlayerHiscoreDTO_WhenSuccessful()
         {
             // Arrange
-            var mockLogger = new Mock<ILogger<PlayerController>>();
-            var mockPlayerService = new Mock<IPlayerService>();
+            var mockLogger = new Mock<ILogger<HiscoreController>>();
+            var mockPlayerService = new Mock<HiscoreService>();
             var playerName = "testPlayer";
             var playerHiscore = new PlayerHiscore { Name = playerName, TotalExperience = 1000, Rank = 1, TotalLevel = 99, Skills = [] };
             var serviceResponse = Result<PlayerHiscore>.Success(playerHiscore);
@@ -27,7 +27,7 @@ namespace DotnetComp.Tests
             mockPlayerService.Setup(service => service.GetPlayerHiscoreDataAsync(playerName))
                              .ReturnsAsync(serviceResponse);
 
-            var controller = new PlayerController(mockLogger.Object, mockPlayerService.Object);
+            var controller = new HiscoreController(mockLogger.Object, mockPlayerService.Object);
 
             // Act 
             ActionResult<PlayerHiscoreDTO> result = await controller.Get(playerName);
@@ -45,15 +45,15 @@ namespace DotnetComp.Tests
         public async Task Get_ReturnsStatusCode500_WhenErrorOccurs()
         {
             // Arrange
-            var mockLogger = new Mock<ILogger<PlayerController>>();
-            var mockPlayerService = new Mock<IPlayerService>();
+            var mockLogger = new Mock<ILogger<HiscoreController>>();
+            var mockPlayerService = new Mock<HiscoreService>();
             var playerName = "testPlayer";
             var serviceResponse = Result<PlayerHiscore>.Failure(PlayerHiscoreError.ServiceError());
 
             mockPlayerService.Setup(service => service.GetPlayerHiscoreDataAsync(playerName))
                              .ReturnsAsync(serviceResponse);
 
-            var controller = new PlayerController(mockLogger.Object, mockPlayerService.Object);
+            var controller = new HiscoreController(mockLogger.Object, mockPlayerService.Object);
 
             // Act
             var result = await controller.Get(playerName);

@@ -11,7 +11,7 @@ namespace DotnetComp.Models.Dto
 
         public static PlayerHiscoreDTO FromDomain(PlayerHiscore domain)
         {
-            var dto = new PlayerHiscoreDTO
+            return new PlayerHiscoreDTO
             {
 
                 Name = domain.Name,
@@ -20,7 +20,7 @@ namespace DotnetComp.Models.Dto
                 TotalExperience = domain.TotalExperience,
                 TotalLevel = domain.TotalLevel,
             };
-            return dto;
+
         }
     }
 

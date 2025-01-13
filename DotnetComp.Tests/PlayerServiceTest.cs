@@ -15,12 +15,12 @@ namespace DotnetComp.Tests
             // Arrange
             var playerName = "testName";
             var playerHiscoreString = Constants.playerHiScoreString;
-            var mockLogger = new Mock<ILogger<PlayerService>>();
+            var mockLogger = new Mock<ILogger<HiscoreService>>();
             var mockClient = new Mock<IRunescapeClient>();
             mockClient.Setup(client => client.GetPlayerHiscoreAsync(playerName)).ReturnsAsync(new HttpResponseMessage { StatusCode = HttpStatusCode.OK, Content = new StringContent(playerHiscoreString) });
 
 
-            var service = new PlayerService(mockLogger.Object, mockClient.Object);
+            var service = new HiscoreService(mockLogger.Object, mockClient.Object);
 
             // Act
             var result = await service.GetPlayerHiscoreDataAsync(playerName);

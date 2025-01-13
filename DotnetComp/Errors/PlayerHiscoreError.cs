@@ -6,19 +6,23 @@ using System.Threading.Tasks;
 
 namespace DotnetComp.Errors
 {
-    public static class PlayerHiscoreError
+    public sealed class PlayerHiscoreError(string code, string description) : IError
     {
-        public static BaseError NotFound()
+        public string Code { get; set; } = code;
+
+        public string Description { get; set; } = description;
+
+        public static PlayerHiscoreError NotFound()
         {
-            return BaseError.Failure("PlayerHiscoreError.NotFound", "Player not found");
+            return new PlayerHiscoreError("PlayerHiscoreError.NotFound", "Player not found");
         }
-        public static BaseError ServiceError()
+        public static PlayerHiscoreError ServiceError()
         {
-            return BaseError.Failure("PlayerHiscoreError.ServiceError", "Service error");
+            return new PlayerHiscoreError("PlayerHiscoreError.ServiceError", "Service error");
         }
-        public static BaseError ConversionError()
+        public static PlayerHiscoreError ConversionError()
         {
-            return BaseError.Failure("PlayerHiscoreError.ConversionError", "Error when calculating player hiscore");
+            return new PlayerHiscoreError("PlayerHiscoreError.ConversionError", "Error when calculating player hiscore");
         }
     }
 }
