@@ -1,5 +1,6 @@
 using DotnetComp.Clients;
 using DotnetComp.Data;
+using DotnetComp.Repositories;
 using DotnetComp.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -8,7 +9,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
-
 
 builder.Services.AddHttpClient(
     "RunescapeClient",
@@ -19,12 +19,14 @@ builder.Services.AddHttpClient(
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
 builder.Services.AddScoped<IHiscoreService, HiscoreService>();
 builder.Services.AddScoped<IRunescapeClient, RunescapeClient>();
-
+builder.Services.AddScoped<IPlayerService, PlayerService>();
+builder.Services.AddScoped<IPlayerRepository, PlayerRepository>();
 // Setup database
-var connectionString = builder.Configuration.GetConnectionString("sqlite") ?? throw new InvalidOperationException("Connection string for database not found.");
+var connectionString =
+    builder.Configuration.GetConnectionString("sqlite")
+    ?? throw new InvalidOperationException("Connection string for database not found.");
 builder.Services.AddDbContext<DatabaseContext>(options => options.UseSqlite(connectionString));
 
 var app = builder.Build();

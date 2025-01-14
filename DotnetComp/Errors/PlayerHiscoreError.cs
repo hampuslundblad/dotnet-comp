@@ -3,26 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-
 namespace DotnetComp.Errors
 {
-    public sealed class PlayerHiscoreError(string code, string description) : IError
+    public static class PlayerHiscoreError
     {
-        public string Code { get; set; } = code;
-
-        public string Description { get; set; } = description;
-
-        public static PlayerHiscoreError NotFound()
+        public static BaseError NotFound()
         {
-            return new PlayerHiscoreError("PlayerHiscoreError.NotFound", "Player not found");
+            return BaseError.NotFound("PlayerHiscoreError.NotFound", "Player not found");
         }
-        public static PlayerHiscoreError ServiceError()
+
+        public static BaseError ServiceError()
         {
-            return new PlayerHiscoreError("PlayerHiscoreError.ServiceError", "Service error");
+            return BaseError.Failure("PlayerHiscoreError.ServiceError", "Service error");
         }
-        public static PlayerHiscoreError ConversionError()
+
+        public static BaseError ConversionError()
         {
-            return new PlayerHiscoreError("PlayerHiscoreError.ConversionError", "Error when calculating player hiscore");
+            return BaseError.Failure(
+                "PlayerHiscoreError.ConversionError",
+                "Error when calculating player hiscore"
+            );
         }
     }
 }

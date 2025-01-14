@@ -1,4 +1,5 @@
 using DotnetComp.Models.Domain;
+
 namespace DotnetComp.Models.Dto
 {
     public class PlayerHiscoreDTO
@@ -13,15 +14,12 @@ namespace DotnetComp.Models.Dto
         {
             return new PlayerHiscoreDTO
             {
-
                 Name = domain.Name,
                 Rank = domain.Rank,
                 Skills = domain.Skills,
                 TotalExperience = domain.TotalExperience,
                 TotalLevel = domain.TotalLevel,
             };
-
         }
     }
-
 }

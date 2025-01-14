@@ -8,5 +8,8 @@ namespace DotnetComp.Models.Dto
     public class GetPlayerDTO
     {
         public required string Name { get; set; }
+        public required int ExperienceGainedLastWeek { get; set; }
+        public required int ExperienceGainedLast24H { get; set; }
+        public required int TotalExperience { get; set; }
     }
 }

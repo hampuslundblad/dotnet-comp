@@ -1,28 +1,44 @@
-using Microsoft.AspNetCore.Mvc;
+using DotnetComp.Errors;
+using DotnetComp.Models.Domain;
 using DotnetComp.Models.Dto;
+using DotnetComp.Models.Entities;
+using DotnetComp.Models.Requests;
 using DotnetComp.Results;
 using DotnetComp.Services;
-using DotnetComp.Errors;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DotnetComp.Controllers
 {
     [ApiController]
     [Route("player")]
-    public class PlayerController(ILogger<PlayerController> logger, IPlayerService playerService) : ControllerBase
+    public class PlayerController(ILogger<PlayerController> logger, IPlayerService playerService)
+        : ControllerBase
     {
         private readonly ILogger<PlayerController> logger = logger;
         private readonly IPlayerService playerService = playerService;
 
         [HttpGet()]
-        public async Task<ActionResult<GetPlayerDTO>> GetPlayer()
+        public async Task<ActionResult<GetPlayerDTO>> GetPlayer([FromQuery] string playerName)
         {
-            var result = await playerService.GetPlayer(123);
+            if (playerName.Length < 3 || playerName.Length > 100 || playerName == null)
+            {
+                return BadRequest(
+                    "The length of the player's name cannot be less than 3 and greater than 100"
+                );
+            }
+
+            var result = await playerService.GetPlayer(playerName);
+            logger.LogDebug("Retrieving player {playerName}", playerName);
             return result.Match(
                 onSuccess: () =>
                 {
+                    var player = result.Value;
                     var dto = new GetPlayerDTO
                     {
-                        Name = result.Value.PlayerName
+                        Name = player.PlayerName,
+                        ExperienceGainedLast24H = player.ExperienceGainedLast24H,
+                        ExperienceGainedLastWeek = player.ExperienceGainedLastWeek,
+                        TotalExperience = player.TotalExperience,
                     };
                     return Ok(dto);
                 },
@@ -31,7 +47,28 @@ namespace DotnetComp.Controllers
                     return error.ErrorType switch
                     {
                         ErrorType.NotFound => NotFound("Player not found"),
-                        _ => StatusCode(500, "An unexpected error occurred")
+                        _ => StatusCode(500, "An unexpected error occurred"),
+                    };
+                }
+            );
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> CreatePlayer(
+            [FromBody] CreatePlayerRequest createPlayerRequest
+        )
+        {
+            var result = await playerService.CreatePlayer(createPlayerRequest.PlayerName);
+            return result.Match(
+                onSuccess: () =>
+                {
+                    return Ok(result);
+                },
+                onFailure: (error) =>
+                {
+                    return error.ErrorType switch
+                    {
+                        _ => StatusCode(500, "An unexpected error occured"),
                     };
                 }
             );

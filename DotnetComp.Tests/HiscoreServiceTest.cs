@@ -7,7 +7,7 @@ using Moq;
 
 namespace DotnetComp.Tests
 {
-    public class PlayerServiceTest
+    public class HiscoreServiceTest
     {
         [Fact]
         public async Task GetPlayerHiscoreDataAsync_ReturnsPlayerHiScore_WhenSuccessfull()

@@ -9,13 +9,13 @@ namespace DotnetComp.Results
     public class BaseResult
     {
         public bool IsSucess { get; protected set; }
-        public IError? Error { get; }
+        public BaseError? Error { get; }
 
-        //public static implicit operator BaseResult(IError error) => new(error);
+        public static implicit operator BaseResult(BaseError error) => new(error);
 
         public static BaseResult Success() => new();
 
-        public static BaseResult Failure(IError error) => new(error);
+        public static BaseResult Failure(BaseError error) => new(error);
 
         protected BaseResult()
         {
@@ -23,13 +23,10 @@ namespace DotnetComp.Results
             Error = default;
         }
 
-        protected BaseResult(IError error)
+        protected BaseResult(BaseError error)
         {
             IsSucess = false;
             Error = error;
         }
-
-
     }
-
 }
