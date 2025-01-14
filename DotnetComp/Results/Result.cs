@@ -9,7 +9,7 @@ namespace DotnetComp.Results
     public sealed class Result<TValue> : BaseResult
     {
         public TValue Value =>
-            IsSucess
+            IsSuccess
                 ? _value
                 : throw new InvalidOperationException(
                     "Value cannot be accessed on a failed result"

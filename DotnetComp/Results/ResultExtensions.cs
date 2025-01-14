@@ -14,7 +14,7 @@ namespace DotnetComp.Results
             Func<BaseError, T> onFailure
         )
         {
-            return result.IsSucess ? onSuccess() : onFailure(result.Error!);
+            return result.IsSuccess ? onSuccess() : onFailure(result.Error!);
         }
 
         public static T Match<T, TValue>(
@@ -23,7 +23,7 @@ namespace DotnetComp.Results
             Func<BaseError, T> onFailure
         )
         {
-            return result.IsSucess ? onSuccess(result.Value) : onFailure(result.Error!);
+            return result.IsSuccess ? onSuccess(result.Value) : onFailure(result.Error!);
         }
     }
 }

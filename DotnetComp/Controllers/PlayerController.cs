@@ -54,7 +54,7 @@ namespace DotnetComp.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreatePlayer(
+        public async Task<IActionResult> CreatePlayer(
             [FromBody] CreatePlayerRequest createPlayerRequest
         )
         {

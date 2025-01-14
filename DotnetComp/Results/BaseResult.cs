@@ -8,7 +8,7 @@ namespace DotnetComp.Results
 {
     public class BaseResult
     {
-        public bool IsSucess { get; protected set; }
+        public bool IsSuccess { get; protected set; }
         public BaseError? Error { get; }
 
         public static implicit operator BaseResult(BaseError error) => new(error);
@@ -19,13 +19,13 @@ namespace DotnetComp.Results
 
         protected BaseResult()
         {
-            IsSucess = true;
+            IsSuccess = true;
             Error = default;
         }
 
         protected BaseResult(BaseError error)
         {
-            IsSucess = false;
+            IsSuccess = false;
             Error = error;
         }
     }

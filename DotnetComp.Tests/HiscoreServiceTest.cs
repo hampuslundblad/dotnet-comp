@@ -26,7 +26,7 @@ namespace DotnetComp.Tests
             var result = await service.GetPlayerHiscoreDataAsync(playerName);
 
             // Assert
-            Assert.True(result.IsSucess);
+            Assert.True(result.IsSuccess);
             Assert.Equal(playerName, result.Value.Name);
             Assert.Equal(359002, result.Value.Rank);
             Assert.Equal(1990, result.Value.TotalLevel);
