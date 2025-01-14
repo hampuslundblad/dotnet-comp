@@ -1,11 +1,13 @@
+using Asp.Versioning;
 using DotnetComp.Errors;
 using DotnetComp.Models.Dto;
 using DotnetComp.Results;
 using DotnetComp.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DotnetComp.Controllers
+namespace DotnetComp.Controllers.v1
 {
+    [ApiVersion("1.0")]
     [ApiController]
     [Route("hiscore")]
     public class HiscoreController(

@@ -1,0 +1,21 @@
+# build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+
+WORKDIR /src
+COPY ["dotnet-comp.sln", "/"]
+COPY ["DotnetComp/DotnetComp.csproj", "DotnetComp/"]
+
+RUN dotnet restore "DotnetComp/DotnetComp.csproj"
+
+WORKDIR /src/DotnetComp
+
+RUN dotnet publish -c Release -o /app
+
+ENTRYPOINT ["dotnet", "DotnetComp.dll"]
+
+#runtime
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
+EXPOSE 8080
+WORKDIR /app
+COPY --link --from=build /app .
+ENTRYPOINT ["./DotnetComp"]

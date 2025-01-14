@@ -16,3 +16,17 @@ dotnet add package Microsoft.EntityFrameworkCore.Design
 dotnet ef migrations add InitialCreate
 dotnet ef database update
 ```
+
+
+### Docker
+
+### VS Code settings
+
+If there's any issues with the C# dev kit languager server then add this in `.vscode/settings.json`
+
+```bash
+{
+  "dotnet.dotnetPath": "pathtodotnet"
+}
+
+```

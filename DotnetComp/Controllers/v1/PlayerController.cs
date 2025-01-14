@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using DotnetComp.Errors;
 using DotnetComp.Models.Domain;
 using DotnetComp.Models.Dto;
@@ -7,8 +8,9 @@ using DotnetComp.Results;
 using DotnetComp.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DotnetComp.Controllers
+namespace DotnetComp.Controllers.v1
 {
+    [ApiVersion("1.0")]
     [ApiController]
     [Route("player")]
     public class PlayerController(ILogger<PlayerController> logger, IPlayerService playerService)
@@ -18,7 +20,7 @@ namespace DotnetComp.Controllers
         private readonly IPlayerService playerService = playerService;
 
         [HttpGet()]
-        public async Task<ActionResult<GetPlayerDTO>> GetPlayer([FromQuery] string playerName)
+        public async Task<ActionResult<PlayerDTO>> GetPlayer([FromQuery] string playerName)
         {
             if (playerName.Length < 3 || playerName.Length > 100 || playerName == null)
             {
@@ -32,14 +34,7 @@ namespace DotnetComp.Controllers
             return result.Match(
                 onSuccess: () =>
                 {
-                    var player = result.Value;
-                    var dto = new GetPlayerDTO
-                    {
-                        Name = player.PlayerName,
-                        ExperienceGainedLast24H = player.ExperienceGainedLast24H,
-                        ExperienceGainedLastWeek = player.ExperienceGainedLastWeek,
-                        TotalExperience = player.TotalExperience,
-                    };
+                    var dto = PlayerDTO.FromDomain(result.Value);
                     return Ok(dto);
                 },
                 onFailure: (error) =>
